@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/julienschmidt/httprouter"
+	"github.com/gorilla/mux"
 )
 
 func handlerFunc(w http.ResponseWriter, r *http.Request) {
@@ -20,20 +20,8 @@ func handlerFunc(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	fmt.Fprint(w, "Welcome!\n")
-}
-
-func Hello(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	fmt.Fprintf(w, "hello, %s!\n", ps.ByName("name"))
-}
-
 func main() {
-	router := httprouter.New()
-	router.GET("/", Index)
-	router.GET("/hello/:name", Hello)
-	//mux := &http.ServeMux{}
-	//mux.HandleFunc("/", handlerFunc)
-	// http.HandleFunc("/", handlerFunc)
-	http.ListenAndServe(":3010", router)
+	r := mux.NewRouter()
+	r.HandleFunc("/", handlerFunc)
+	http.ListenAndServe(":3010", r)
 }
